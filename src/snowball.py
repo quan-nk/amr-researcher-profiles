@@ -30,11 +30,8 @@ def run(
     screen_years: int = 0,
 ) -> SnowballResult:
     """
-    BFS from seed_author_id. At each node:
-      1. Fetch all AMR papers for the author.
-      2. Extract priority co-authors (first 3 + last 2 per paper).
-      3. Enqueue unseen co-authors if within depth limit.
-    Checkpoints BFS state every checkpoint_every authors if checkpoint_dir is set.
+    BFS from seed_author_id. Stops when max_authors qualifying authors are collected,
+    or when total visited nodes exceeds max_authors*8 (safety valve), or queue empties.
     """
     keywords = load_amr_keywords()
     concept_ids = load_amr_concept_ids()
@@ -52,13 +49,17 @@ def run(
 
     n_processed = 0
 
+    visited_cap = max_authors * 8 if max_authors else 0
+
     with tqdm(desc="Mining network", unit="author", initial=len(visited)) as pbar:
         while queue:
             author_id, current_depth = queue.popleft()
 
             if author_id in visited:
                 continue
-            if max_authors and len(visited) > max_authors:
+            if max_authors and len(result.authors) >= max_authors:
+                break
+            if visited_cap and len(visited) >= visited_cap:
                 break
             visited.add(author_id)
             pbar.update(1)

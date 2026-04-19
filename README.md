@@ -15,23 +15,24 @@ Seed researcher (Google Scholar URL or name)
   Resolve → OpenAlex author ID
         │
         ▼
-  Fetch all AMR-related papers
-  (filter by keywords + OpenAlex concepts)
+  Screen: h-index ≥ 20 AND ≥1 AMR paper in last 5 years
         │
         ▼
-  Extract priority co-authors
-  (first 3 authors + last 2 per paper)
+  Fetch AMR-related papers (keyword match on title/abstract)
         │
         ▼
-  Add new authors to queue
+  Extract priority co-authors (first 5 + last 5 per paper)
         │
-        └──► Repeat until queue empty or depth limit reached
+        ▼
+  Screen each co-author: h-index ≥ 20 AND AMR pub last 5y
+        │
+        └──► Repeat to specified depth
                         │
                         ▼
               Output: authors, papers, network edge list
 ```
 
-**Convergence** occurs when a full BFS round adds no new unvisited authors. Default depth limit: 3 hops.
+**Convergence** stops when `--max-authors` qualifying authors have been collected, or when total nodes visited exceeds 8× that cap (safety valve). Default depth: 2 hops.
 
 ---
 
@@ -70,20 +71,29 @@ python -m src.cli --author "Guy Thwaites" --institution "OUCRU"
 ### Full options
 ```bash
 python -m src.cli \
-  --author "Marc Choisy" \
+  --author "Guy Thwaites" \
   --institution "OUCRU" \
   --depth 2 \
+  --screen \
+  --min-hindex 20 \
+  --max-authors 500 \
   --output data/processed/my_run/
 ```
 
 | Flag | Default | Description |
 |---|---|---|
 | `--scholar` | — | Google Scholar profile URL |
-| `--author` | — | Author name (alternative to --scholar) |
+| `--author` | — | Author name |
+| `--author-id` | — | OpenAlex author ID (skips resolution) |
 | `--institution` | — | Narrows author search |
 | `--depth` | 3 | Maximum BFS hops |
+| `--screen` | off | Skip authors with no AMR pub in last 5 years |
+| `--min-hindex` | 0 | Skip authors below this h-index |
+| `--max-authors` | 0 | Stop after N qualifying authors (0 = unlimited) |
 | `--output` | `data/processed/{timestamp}/` | Output directory |
 | `--rate-limit` | 1.0 | Seconds between API calls |
+| `--resume` | off | Resume BFS from checkpoint in `--output` dir |
+| `--auto-select` | off | Auto-select first OpenAlex candidate (non-interactive) |
 
 ---
 
@@ -151,7 +161,7 @@ If you use this tool in research, please cite:
   author = {Nguyen, Khoi Quan},
   title  = {AMR Researcher Profiles: A Snowball Sampling Framework for AMR Research Networks},
   year   = {2025},
-  url    = {https://github.com/YOUR_USERNAME/amr-researcher-profiles}
+  url    = {https://github.com/quan-nk/amr-researcher-profiles}
 }
 ```
 
