@@ -1,0 +1,50 @@
+{
+  "keywords": [
+    "antimicrobial resistance",
+    "antibiotic resistance",
+    "drug resistance",
+    "AMR",
+    "MRSA",
+    "ESBL",
+    "carbapenem",
+    "carbapenemase",
+    "MDR",
+    "XDR",
+    "PDR",
+    "beta-lactamase",
+    "susceptibility testing",
+    "antibiogram",
+    "WHONET",
+    "GLASS",
+    "colistin",
+    "vancomycin resistance",
+    "fluoroquinolone resistance",
+    "multidrug resistant",
+    "extensively drug resistant",
+    "pandrug resistant",
+    "minimum inhibitory concentration",
+    "MIC",
+    "antimicrobial stewardship",
+    "resistance surveillance",
+    "VINARES",
+    "ANSORP"
+  ],
+  "openalex_concept_ids": [
+    {
+      "id": "C94665300",
+      "name": "Antibiotic resistance",
+      "note": "verified 2026-04-19"
+    },
+    {
+      "id": "C114851261",
+      "name": "Drug resistance",
+      "note": "verified 2026-04-19"
+    },
+    {
+      "id": "C133936738",
+      "name": "Multiple drug resistance",
+      "note": "verified 2026-04-19"
+    }
+  ],
+  "notes": "Concept IDs must be verified against the live OpenAlex API before use. Run: python -m src.cli --verify-concepts"
+}
