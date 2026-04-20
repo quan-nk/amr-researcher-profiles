@@ -119,8 +119,8 @@ def run(
 
 
 def _extract_institution(profile: dict) -> str | None:
-    inst = profile.get("last_known_institution") or {}
-    return inst.get("display_name")
+    insts = profile.get("last_known_institutions") or []
+    return insts[0].get("display_name") if insts else None
 
 
 def _flatten_paper(work: dict) -> dict:
